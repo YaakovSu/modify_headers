@@ -1,0 +1,979 @@
+(dp1
+S'output'
+p2
+S''
+sS'layer'
+p3
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p4
+sS'code'
+p5
+S'# -*- coding: utf-8 -*- \n# this file is released under public domain and you can use without limitations\n\n#########################################################################\n## This is a samples controller\n## - index is the default action of any application\n## - user is required for authentication and authorization\n## - download is for downloading files uploaded in the db (does streaming)\n## - call exposes all registered services (none by default)\n#########################################################################\n\nimport urllib2\n\n# import simplejson as json\nif request.env.web2py_runtime_gae:\n    from django.utils import simplejson as json\nelse:\n    import simplejson as json\n\ndef index():\n\n    headers=session.headers \n                \n    if headers==None or len(headers)<1:\n        # try to read headers from the cookies\n        headers=_load_cookies(request)        \n        if headers==None:        \n            headers={}\n            \n        session.headers=headers\n\n        \n    form = SQLFORM.factory(\n         Field(\'url\', requires=IS_NOT_EMPTY()),\n         Field(\'header\'),\n         Field(\'value\'),\n         Field(\'result\', \'text\')\n         )\n         \n        \n    if form.accepts(request.vars, formname=\'form_one\'):\n        response.flash = T(\'Here you go!!\')                \n        form.vars.result=_call_url(form, headers)\n        \n        # return T(\'Error calling the url.\')\n        \n        if request.vars.flag_redirect ==\'y\':\n            return form.vars.result\n                    \n            \n    return dict(form=form, headers=_html_headers(headers))\n\n\ndef _set_headres(headers, req):\n    \n    if headers:\n        for h in headers:\n            req.add_header(h, headers[h])\n    \n    return req\n            \n\n        \ndef _call_url(form, headers):\n    \n    \n    if not form.vars.url.startswith(\'http\'):\n        url=\'http://%s\' %form.vars.url\n    else:\n        url=form.vars.url\n    \n    req = urllib2.Request(url)\n    req= _set_headres(headers, req)\n            \n    opener = urllib2.build_opener()\n    res=opener.open(req)    \n    \n    return res.read()\n    \ndef _html_headers(headers):\n    \n    list_header=[]\n    for h in headers:\n        list_header.append(LI(\'%s:%s  \' %(h, headers[h]), A(DIV(\'delete\', _id=\'%s\' %h, _class=\'link_delete\' ), _href=\'#\')))\n                        \n    return UL(list_header, _id=\'list_headers\')\n    \ndef add_header():\n\n    headers=session.headers\n               \n    if (request.vars.header and len(request.vars.header)>0):\n        headers[request.vars.header]= request.vars.value\n\n          \n    return _html_headers(headers).xml()\n    \ndef delete_header():\n    \n    headers=session.headers\n   \n    if request.vars.header:\n        headers.pop(request.vars.header)\n    \n    return _html_headers(headers).xml()\n    \ndef _save_cookies(response, headers):\n\n    response.cookies[\'headers\'] = json.dumps(headers)\n    \n    # one month cookies\n    response.cookies[\'headers\'][\'expires\'] = 30 * 24 * 60 * 60\n    # response.cookies[\'headers\'][\'path\'] = \'/modify_headers/\'\n    # response.cookies[\'headers\'][\'domain\'] = response._view_environment[\'request\'].env[\'remote_addr\']\n    \ndef _load_cookies(request):\n\n        \n    if request.cookies.has_key(\'headers\'):    \n            \n        myc=request.cookies[\'headers\']    \n                                  \n        return json.loads(myc.value)\n       \n           \ndef call():\n    """\n    exposes services. for example:\n    http://..../[app]/default/call/jsonrpc\n    decorate with @services.jsonrpc the functions to expose\n    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv\n    """\n    session.forget()\n    return service()\n\nresponse._vars=response._caller(index)\n'
+p6
+sS'snapshot'
+p7
+(dp8
+S'exception'
+p9
+(dp10
+S'__module__'
+p11
+S"'urllib2'"
+p12
+sg5
+S'404'
+p13
+sS'__getslice__'
+p14
+S"<method-wrapper '__getslice__' of HTTPError object>"
+p15
+sS'__str__'
+p16
+S'<bound method HTTPError.__str__ of HTTPError()>'
+p17
+sS'__reduce__'
+p18
+S'<built-in method __reduce__ of HTTPError object>'
+p19
+sS'__dict__'
+p20
+S"{'__iter__': <bound method _fileobject.__iter__ of <socket._fileobject object>>, 'code': 404, 'fileno': <bound method _fileobject.fileno of <socket._fileobject object>>, 'fp': <addinfourl at 159938156 whose fp = <socket._fileobject object>>, 'hdrs': <httplib.HTTPMessage instance>, 'headers': <httplib.HTTPMessage instance>, 'msg': 'Not Found', 'next': <bound method _fileobject.next of <socket._fileobject object>>, 'read': <bound method _fileobject.read of <socket._fileobject object>>, 'readline': <bound method _fileobject.readline of <socket._fileobject object>>, ...}"
+p21
+sS'close'
+p22
+S'<bound method HTTPError.close of HTTPError()>'
+p23
+sS'__sizeof__'
+p24
+S'<built-in method __sizeof__ of HTTPError object>'
+p25
+sS'next'
+p26
+S'<bound method _fileobject.next of <socket._fileobject object>>'
+p27
+sS'__weakref__'
+p28
+S'None'
+p29
+sS'__init__'
+p30
+S'<bound method HTTPError.__init__ of HTTPError()>'
+p31
+sS'__setattr__'
+p32
+S"<method-wrapper '__setattr__' of HTTPError object>"
+p33
+sS'__reduce_ex__'
+p34
+S'<built-in method __reduce_ex__ of HTTPError object>'
+p35
+sS'__new__'
+p36
+S'<built-in method __new__ of type object>'
+p37
+sS'headers'
+p38
+S'<httplib.HTTPMessage instance>'
+p39
+sS'errno'
+p40
+S'None'
+p41
+sS'readlines'
+p42
+S'<bound method _fileobject.readlines of <socket._fileobject object>>'
+p43
+sS'__format__'
+p44
+S'<built-in method __format__ of HTTPError object>'
+p45
+sS'__class__'
+p46
+S"<class 'urllib2.HTTPError'>"
+p47
+sS'filename'
+p48
+S"'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js'"
+p49
+sS'_HTTPError__super_init'
+p50
+S'<bound method HTTPError.__init__ of HTTPError()>'
+p51
+sS'msg'
+p52
+S"'Not Found'"
+p53
+sS'__doc__'
+p54
+S"'Raised when HTTP error occurs, but also acts like non-error return'"
+p55
+sS'fp'
+p56
+S'<addinfourl at 159938156 whose fp = <socket._fileobject object>>'
+p57
+sS'hdrs'
+p58
+S'<httplib.HTTPMessage instance>'
+p59
+sS'__getitem__'
+p60
+S"<method-wrapper '__getitem__' of HTTPError object>"
+p61
+sS'__setstate__'
+p62
+S'<built-in method __setstate__ of HTTPError object>'
+p63
+sS'read'
+p64
+S'<bound method _fileobject.read of <socket._fileobject object>>'
+p65
+sS'__getattribute__'
+p66
+S"<method-wrapper '__getattribute__' of HTTPError object>"
+p67
+sS'args'
+p68
+S'()'
+p69
+sS'__iter__'
+p70
+S'<bound method _fileobject.__iter__ of <socket._fileobject object>>'
+p71
+sS'__subclasshook__'
+p72
+S'<built-in method __subclasshook__ of type object>'
+p73
+sS'readline'
+p74
+S'<bound method _fileobject.readline of <socket._fileobject object>>'
+p75
+sS'__unicode__'
+p76
+S'<built-in method __unicode__ of HTTPError object>'
+p77
+sS'info'
+p78
+S'<bound method HTTPError.info of HTTPError()>'
+p79
+sS'fileno'
+p80
+S'<bound method _fileobject.fileno of <socket._fileobject object>>'
+p81
+sS'getcode'
+p82
+S'<bound method HTTPError.getcode of HTTPError()>'
+p83
+sS'url'
+p84
+S"'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js'"
+p85
+sS'strerror'
+p86
+S'None'
+p87
+sS'geturl'
+p88
+S'<bound method HTTPError.geturl of HTTPError()>'
+p89
+sS'__delattr__'
+p90
+S"<method-wrapper '__delattr__' of HTTPError object>"
+p91
+sS'__repr__'
+p92
+S"<method-wrapper '__repr__' of HTTPError object>"
+p93
+sS'__hash__'
+p94
+S"<method-wrapper '__hash__' of HTTPError object>"
+p95
+ssS'evalue'
+p96
+S'HTTP Error 404: Not Found'
+p97
+sS'request'
+p98
+(dp99
+S'function'
+p100
+S"'index'"
+p101
+sS'body'
+p102
+S"<open file '<fdopen>', mode 'w+b'>"
+p103
+sS'wsgi'
+p104
+S"<Storage {'start_response': <function <lambda> a...ING': 'gzip,deflate', 'HTTP_KEEP_ALIVE': '115'}}>"
+p105
+sS'extension'
+p106
+S"'html'"
+p107
+sS'vars'
+p108
+S"<Storage {'flag_redirect': 'n', 'url': 'https://...r', '_formname': 'form_one', 'save_cookie': 'Y'}>"
+p109
+sS'cid'
+p110
+S'None'
+p111
+sg84
+S'<gluon.html.XML object>'
+p112
+sg68
+S'[]'
+p113
+sS'controller'
+p114
+S"'default'"
+p115
+sS'cookies'
+p116
+S'<SimpleCookie: headers=\'{"header": "value"}\' ses...\'127.0.0.1-12623d41-fcf4-4c78-9489-ef0b3e87acff\'>'
+p117
+sS'application'
+p118
+S"'modify_headers'"
+p119
+sS'ajax'
+p120
+S'False'
+p121
+sS'client'
+p122
+S"'127.0.0.1'"
+p123
+sS'env'
+p124
+S"<Storage {'content_length': '823', 'http_user_ag...te', 'query_string': '', 'wsgi_run_once': False}>"
+p125
+sS'raw_args'
+p126
+S'None'
+p127
+sS'get_vars'
+p128
+S'<Storage {}>'
+p129
+sS'folder'
+p130
+S"'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/'"
+p131
+sS'now'
+p132
+S'datetime.datetime(2011, 1, 22, 19, 32, 22, 445070)'
+p133
+sS'post_vars'
+p134
+S"<Storage {'flag_redirect': 'n', 'url': 'https://...r', '_formname': 'form_one', 'save_cookie': 'Y'}>"
+p135
+ssS'frames'
+p136
+(lp137
+(dp138
+S'file'
+p139
+S'/home/uolter/pycode/web2py_1.90.3/gluon/restricted.py'
+p140
+sS'dump'
+p141
+(dp142
+S'environment'
+p143
+S"{'A': <class 'gluon.html.A'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'CENTER': <class 'gluon.html.CENTER'>, 'CLEANUP': <class 'gluon.validators.CLEANUP'>, 'CODE': <class 'gluon.html.CODE'>, 'CRYPT': <class 'gluon.validators.CRYPT'>, ...}"
+p144
+sS'ccode'
+p145
+S'<code object <module> at 0x99265c0, file "/home/.../modify_headers/controllers/default.py", line 12>'
+p146
+ssS'lnum'
+p147
+I188
+sS'lines'
+p148
+(dp149
+I192
+S'        # XXX Show exception in Wing IDE if running in debugger'
+p150
+sI183
+S'        if type(code) == types.CodeType:'
+p151
+sI184
+S'            ccode = code'
+p152
+sI185
+S'        else:'
+p153
+sI186
+S'            ccode = compile2(code,layer)'
+p154
+sI187
+S''
+sI188
+S'        exec ccode in environment'
+p155
+sI189
+S'    except HTTP:'
+p156
+sI190
+S'        raise'
+p157
+sI191
+S'    except Exception:'
+p158
+ssS'call'
+p159
+S"(code='# -*- coding: utf-8 -*- \\n# this file is released...ervice()\\n\\nresponse._vars=response._caller(index)\\n', environment={'A': <class 'gluon.html.A'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'CENTER': <class 'gluon.html.CENTER'>, 'CLEANUP': <class 'gluon.validators.CLEANUP'>, 'CODE': <class 'gluon.html.CODE'>, 'CRYPT': <class 'gluon.validators.CRYPT'>, ...}, layer='/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py')"
+p160
+sS'func'
+p161
+S'restricted'
+p162
+sa(dp163
+g139
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p164
+sg141
+(dp165
+sg147
+I136
+sg148
+(dp166
+I128
+S'    exposes services. for example:'
+p167
+sI129
+S'    http://..../[app]/default/call/jsonrpc'
+p168
+sI130
+S'    decorate with @services.jsonrpc the functions to expose'
+p169
+sI131
+S'    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv'
+p170
+sI132
+S'    """'
+p171
+sI133
+S'    session.forget()'
+p172
+sI134
+S'    return service()'
+p173
+sI125
+S''
+sI126
+S'def call():'
+p174
+sI127
+S'    """'
+p175
+ssg159
+S'()'
+p176
+sg161
+S'<module>'
+p177
+sa(dp178
+g139
+S'/home/uolter/pycode/web2py_1.90.3/gluon/globals.py'
+p179
+sg141
+(dp180
+S'self'
+p181
+S'undefined'
+p182
+sS'f'
+S'<function index>'
+p183
+ssg147
+I95
+sg148
+(dp184
+I96
+S'        self._view_environment = None'
+p185
+sI97
+S'        self._custom_commit = None'
+p186
+sI98
+S'        self._custom_rollback = None'
+p187
+sI99
+S''
+sI90
+S"        self.flash = ''           # used by the default view layout"
+p188
+sI91
+S'        self.meta = Storage()     # used by web2py_ajax.html'
+p189
+sI92
+S'        self.menu = []            # used by the default view layout'
+p190
+sI93
+S'        self.files = []           # used by web2py_ajax.html'
+p191
+sI94
+S'        self._vars = None'
+p192
+sI95
+S'        self._caller = lambda f: f()'
+p193
+ssg159
+S'(f=<function index>)'
+p194
+sg161
+S'<lambda>'
+p195
+sa(dp196
+g139
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p197
+sg141
+(dp198
+S'global _call_url'
+p199
+S'<function _call_url>'
+p200
+sS'headers'
+p201
+S"{'User-Agent': 'Nokia6230'}"
+p202
+sS'form.vars.result'
+p203
+S"''"
+p204
+sS'form.vars'
+p205
+S"<Storage {'url': 'https://ajax.googleapis.com/aj...er', 'result': '', 'value': 'value', 'id': None}>"
+p206
+sS'form'
+p207
+S'<gluon.sqlhtml.SQLFORM object>'
+p208
+ssg147
+I43
+sg148
+(dp209
+I38
+S'         )'
+p210
+sI39
+S''
+sI40
+S''
+sI41
+S"    if form.accepts(request.vars, formname='form_one'):"
+p211
+sI42
+S"        response.flash = T('Here you go!!')"
+p212
+sI43
+S'        form.vars.result=_call_url(form, headers)'
+p213
+sI44
+S''
+sI45
+S"        # return T('Error calling the url.')"
+p214
+sI46
+S''
+sI47
+S"        if request.vars.flag_redirect =='y':"
+p215
+ssg159
+S'()'
+p216
+sg161
+S'index'
+p217
+sa(dp218
+g139
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p219
+sg141
+(dp220
+S'res'
+p221
+g182
+sS'opener'
+p222
+S'<urllib2.OpenerDirector instance>'
+p223
+sS'req'
+p224
+S'<urllib2.Request instance>'
+p225
+sS'opener.open'
+p226
+S'<bound method OpenerDirector.open of <urllib2.OpenerDirector instance>>'
+p227
+ssg147
+I76
+sg148
+(dp228
+I71
+S''
+sI72
+S'    req = urllib2.Request(url)'
+p229
+sI73
+S'    req= _set_headres(headers, req)'
+p230
+sI74
+S''
+sI75
+S'    opener = urllib2.build_opener()'
+p231
+sI76
+S'    res=opener.open(req)'
+p232
+sI77
+S''
+sI78
+S'    return res.read()'
+p233
+sI79
+S''
+sI80
+S'def _html_headers(headers):'
+p234
+ssg159
+S"(form=<gluon.sqlhtml.SQLFORM object>, headers={'User-Agent': 'Nokia6230'})"
+p235
+sg161
+S'_call_url'
+p236
+sa(dp237
+g139
+S'/usr/lib/python2.6/urllib2.py'
+p238
+sg141
+(dp239
+S'meth'
+p240
+S'<bound method HTTPErrorProcessor.http_response of <urllib2.HTTPErrorProcessor instance>>'
+p241
+sS'req'
+p242
+S'<urllib2.Request instance>'
+p243
+sS'response'
+p244
+S'<addinfourl at 159938156 whose fp = <socket._fileobject object>>'
+p245
+ssg147
+I397
+sg148
+(dp246
+I392
+S''
+sI393
+S'        # post-process response'
+p247
+sI394
+S'        meth_name = protocol+"_response"'
+p248
+sI395
+S'        for processor in self.process_response.get(protocol, []):'
+p249
+sI396
+S'            meth = getattr(processor, meth_name)'
+p250
+sI397
+S'            response = meth(req, response)'
+p251
+sI398
+S''
+sI399
+S'        return response'
+p252
+sI400
+S''
+sI401
+S'    def _open(self, req, data=None):'
+p253
+ssg159
+S'(self=<urllib2.OpenerDirector instance>, fullurl=<urllib2.Request instance>, data=None, timeout=<object object>)'
+p254
+sg161
+S'open'
+p255
+sa(dp256
+g139
+S'/usr/lib/python2.6/urllib2.py'
+p257
+sg141
+(dp258
+S'msg'
+p259
+S"'Not Found'"
+p260
+sS'code'
+p261
+S'404'
+p262
+sS'request'
+p263
+S'<urllib2.Request instance>'
+p264
+sS'response'
+p265
+S'<addinfourl at 159938156 whose fp = <socket._fileobject object>>'
+p266
+sS'hdrs'
+p267
+S'<httplib.HTTPMessage instance>'
+p268
+ssg147
+I510
+sg148
+(dp269
+I512
+S'        return response'
+p270
+sI513
+S''
+sI514
+S'    https_response = http_response'
+p271
+sI505
+S''
+sI506
+S'        # According to RFC 2616, "2xx" code indicates that the client\'s'
+p272
+sI507
+S'        # request was successfully received, understood, and accepted.'
+p273
+sI508
+S'        if not (200 <= code < 300):'
+p274
+sI509
+S'            response = self.parent.error('
+p275
+sI510
+S"                'http', request, response, code, msg, hdrs)"
+p276
+sI511
+S''
+ssg159
+S'(self=<urllib2.HTTPErrorProcessor instance>, request=<urllib2.Request instance>, response=<addinfourl at 159938156 whose fp = <socket._fileobject object>>)'
+p277
+sg161
+S'http_response'
+p278
+sa(dp279
+g139
+S'/usr/lib/python2.6/urllib2.py'
+p280
+sg141
+(dp281
+S'self._call_chain'
+p282
+S'<bound method OpenerDirector._call_chain of <urllib2.OpenerDirector instance>>'
+p283
+sS'self'
+p284
+S'<urllib2.OpenerDirector instance>'
+p285
+sS'args'
+p286
+S"({301: [<urllib2.HTTPRedirectHandler instance>], 302: [<urllib2.HTTPRedirectHandler instance>], 303: [<urllib2.HTTPRedirectHandler instance>], 307: [<urllib2.HTTPRedirectHandler instance>], 'default': [<urllib2.HTTPDefaultErrorHandler instance>]}, 'default', 'http_error_default', <urllib2.Request instance>, <addinfourl at 159938156 whose fp = <socket._fileobject object>>, 404, 'Not Found', <httplib.HTTPMessage instance>)"
+p287
+ssg147
+I435
+sg148
+(dp288
+I430
+S'        if result:'
+p289
+sI431
+S'            return result'
+p290
+sI432
+S''
+sI433
+S'        if http_err:'
+p291
+sI434
+S"            args = (dict, 'default', 'http_error_default') + orig_args"
+p292
+sI435
+S'            return self._call_chain(*args)'
+p293
+sI436
+S''
+sI437
+S'# XXX probably also want an abstract factory that knows when it makes'
+p294
+sI438
+S'# sense to skip a superclass in favor of a subclass and when it might'
+p295
+sI439
+S'# make sense to include both'
+p296
+ssg159
+S"(self=<urllib2.OpenerDirector instance>, proto=404, *args=({301: [<urllib2.HTTPRedirectHandler instance>], 302: [<urllib2.HTTPRedirectHandler instance>], 303: [<urllib2.HTTPRedirectHandler instance>], 307: [<urllib2.HTTPRedirectHandler instance>], 'default': [<urllib2.HTTPDefaultErrorHandler instance>]}, 'default', 'http_error_default', <urllib2.Request instance>, <addinfourl at 159938156 whose fp = <socket._fileobject object>>, 404, 'Not Found', <httplib.HTTPMessage instance>))"
+p297
+sg161
+S'error'
+p298
+sa(dp299
+g139
+S'/usr/lib/python2.6/urllib2.py'
+p300
+sg141
+(dp301
+S'args'
+p302
+S"(<urllib2.Request instance>, <addinfourl at 159938156 whose fp = <socket._fileobject object>>, 404, 'Not Found', <httplib.HTTPMessage instance>)"
+p303
+sS'result'
+p304
+g182
+sS'func'
+p305
+S'<bound method HTTPDefaultErrorHandler.http_error...lt of <urllib2.HTTPDefaultErrorHandler instance>>'
+p306
+ssg147
+I369
+sg148
+(dp307
+I364
+S'        # could.  Otherwise, they return the response.'
+p308
+sI365
+S'        handlers = chain.get(kind, ())'
+p309
+sI366
+S'        for handler in handlers:'
+p310
+sI367
+S'            func = getattr(handler, meth_name)'
+p311
+sI368
+S''
+sI369
+S'            result = func(*args)'
+p312
+sI370
+S'            if result is not None:'
+p313
+sI371
+S'                return result'
+p314
+sI372
+S''
+sI373
+S'    def open(self, fullurl, data=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):'
+p315
+ssg159
+S"(self=<urllib2.OpenerDirector instance>, chain={301: [<urllib2.HTTPRedirectHandler instance>], 302: [<urllib2.HTTPRedirectHandler instance>], 303: [<urllib2.HTTPRedirectHandler instance>], 307: [<urllib2.HTTPRedirectHandler instance>], 'default': [<urllib2.HTTPDefaultErrorHandler instance>]}, kind='default', meth_name='http_error_default', *args=(<urllib2.Request instance>, <addinfourl at 159938156 whose fp = <socket._fileobject object>>, 404, 'Not Found', <httplib.HTTPMessage instance>))"
+p316
+sg161
+S'_call_chain'
+p317
+sa(dp318
+g139
+S'/usr/lib/python2.6/urllib2.py'
+p319
+sg141
+(dp320
+S'fp'
+p321
+S'<addinfourl at 159938156 whose fp = <socket._fileobject object>>'
+p322
+sS'code'
+p323
+S'404'
+p324
+sS'hdrs'
+p325
+S'<httplib.HTTPMessage instance>'
+p326
+sS'req'
+p327
+S'<urllib2.Request instance>'
+p328
+sS'req.get_full_url'
+p329
+S'<bound method Request.get_full_url of <urllib2.Request instance>>'
+p330
+sS'msg'
+p331
+S"'Not Found'"
+p332
+sS'global HTTPError'
+p333
+S"<class 'urllib2.HTTPError'>"
+p334
+ssg147
+I518
+sg148
+(dp335
+I513
+S''
+sI514
+S'    https_response = http_response'
+p336
+sI515
+S''
+sI516
+S'class HTTPDefaultErrorHandler(BaseHandler):'
+p337
+sI517
+S'    def http_error_default(self, req, fp, code, msg, hdrs):'
+p338
+sI518
+S'        raise HTTPError(req.get_full_url(), code, msg, hdrs, fp)'
+p339
+sI519
+S''
+sI520
+S'class HTTPRedirectHandler(BaseHandler):'
+p340
+sI521
+S'    # maximum number of redirections to any single URL'
+p341
+sI522
+S'    # this is needed because of the state that cookies introduce'
+p342
+ssg159
+S"(self=<urllib2.HTTPDefaultErrorHandler instance>, req=<urllib2.Request instance>, fp=<addinfourl at 159938156 whose fp = <socket._fileobject object>>, code=404, msg='Not Found', hdrs=<httplib.HTTPMessage instance>)"
+p343
+sg161
+S'http_error_default'
+p344
+sasS'pyver'
+p345
+S'Python 2.6.5: /usr/bin/python'
+p346
+sS'session'
+p347
+(dp348
+S'headers'
+p349
+S"{'User-Agent': 'Nokia6230'}"
+p350
+ssS'etype'
+p351
+S"<class 'urllib2.HTTPError'>"
+p352
+sS'date'
+p353
+S'Sat Jan 22 19:32:22 2011'
+p354
+sS'response'
+p355
+(dp356
+S'status'
+p357
+S'200'
+p358
+sg102
+S'<cStringIO.StringO object>'
+p359
+sg116
+S"<SimpleCookie: session_id_modify_headers='127.0.0.1-48cbf4c1-637b-4821-9c05-b182df8b477e'>"
+p360
+sS'_vars'
+p361
+S'None'
+p362
+sS'title'
+p363
+S"'modify_headers'"
+p364
+sS'session_file'
+p365
+S"<open file '/home/uolter/pycode/web2py_1.90.3/ap...8cbf4c1-637b-4821-9c05-b182df8b477e', mode 'rb+'>"
+p366
+sS'flash'
+p367
+S"<lazyT 'Here you go!!'>"
+p368
+sS'_custom_rollback'
+p369
+S'None'
+p370
+sS'session_id'
+p371
+S"'127.0.0.1-48cbf4c1-637b-4821-9c05-b182df8b477e'"
+p372
+sg38
+S"<Storage {'Expires': 'Sat, 22 Jan 2011 18:32:22 ...he, must-revalidate, post-check=0, pre-check=0'}>"
+p373
+sS'meta'
+p374
+S"<Storage {'keywords': 'web2py, python, framework... 'Web2py Enterprise Framework', 'author': 'you'}>"
+p375
+sS'session_filename'
+p376
+S"'/home/uolter/pycode/web2py_1.90.3/applications/m...ns/127.0.0.1-48cbf4c1-637b-4821-9c05-b182df8b477e'"
+p377
+sS'postprocessing'
+p378
+S'[]'
+p379
+sS'menu'
+p380
+S"[(<lazyT 'Home'>, False, <gluon.html.XML object>, []), (<lazyT 'This App'>, False, <gluon.html.XML object>, [(<lazyT 'Controller'>, False, <gluon.html.XML object>), (<lazyT 'View'>, False, <gluon.html.XML object>), (<lazyT 'Layout'>, False, <gluon.html.XML object>), (<lazyT 'Stylesheet'>, False, <gluon.html.XML object>), (<lazyT 'DB Model'>, False, <gluon.html.XML object>), (<lazyT 'Menu Model'>, False, <gluon.html.XML object>), (<lazyT 'Database'>, False, <gluon.html.XML object>), (<lazyT 'Errors'>, False, <gluon.html.XML object>), (<lazyT 'About'>, False, <gluon.html.XML object>)]), (<lazyT 'Resources'>, False, None, [(<lazyT 'Documentation'>, False, 'http://www.web2py.com/book', [(<lazyT 'Preface'>, False, 'http://www.web2py.com/book/default/chapter/00'), (<lazyT 'Introduction'>, False, 'http://www.web2py.com/book/default/chapter/01'), (<lazyT 'Python'>, False, 'http://www.web2py.com/book/default/chapter/02'), (<lazyT 'Overview'>, False, 'http://www.web2py.com/book/default/chapter/03'), (<lazyT 'The Core'>, False, 'http://www.web2py.com/book/default/chapter/04'), (<lazyT 'The Views'>, False, 'http://www.web2py.com/book/default/chapter/05'), (<lazyT 'Database'>, False, 'http://www.web2py.com/book/default/chapter/06'), (<lazyT 'Forms and Validators'>, False, 'http://www.web2py.com/book/default/chapter/07'), (<lazyT 'Access Control'>, False, 'http://www.web2py.com/book/default/chapter/08'), (<lazyT 'Services'>, False, 'http://www.web2py.com/book/default/chapter/09'), (<lazyT 'Ajax Recipes'>, False, 'http://www.web2py.com/book/default/chapter/10'), (<lazyT 'Deployment Recipes'>, False, 'http://www.web2py.com/book/default/chapter/11'), (<lazyT 'Other Recipes'>, False, 'http://www.web2py.com/book/default/chapter/12'), (<lazyT 'Buy this book'>, False, 'http://stores.lulu.com/web2py')]), (<lazyT 'Community'>, False, None, [(<lazyT 'Groups'>, False, 'http://www.web2py.com/examples/default/usergroups'), (<lazyT 'Twitter'>, False, 'http://twitter.com/web2py'), (<lazyT 'Live chat'>, False, 'http://mibbit.com/?channel=%23web2py&server=irc.mibbit.net'), (<lazyT 'User Voice'>, False, 'http://web2py.uservoice.com/')]), (<lazyT 'Web2py'>, False, 'http://www.web2py.com', [(<lazyT 'Download'>, False, 'http://www.web2py.com/examples/default/download'), (<lazyT 'Support'>, False, 'http://www.web2py.com/examples/default/support'), (<lazyT 'Quick Examples'>, False, 'http://web2py.com/examples/default/examples'), (<lazyT 'FAQ'>, False, 'http://web2py.com/AlterEgo'), (<lazyT 'Free Applications'>, False, 'http://web2py.com/appliances'), (<lazyT 'Plugins'>, False, 'http://web2py.com/plugins'), (<lazyT 'Recipes'>, False, 'http://web2pyslices.com/'), (<lazyT 'Demo'>, False, 'http://web2py.com/demo_admin'), (<lazyT 'Semantic'>, False, 'http://web2py.com/semantic'), (<lazyT 'Layouts'>, False, 'http://web2py.com/layouts'), (<lazyT 'Videos'>, False, 'http://www.web2py.com/examples/default/videos/')])])]"
+p381
+sS'_view_environment'
+p382
+S"{'A': <class 'gluon.html.A'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'CENTER': <class 'gluon.html.CENTER'>, 'CLEANUP': <class 'gluon.validators.CLEANUP'>, 'CODE': <class 'gluon.html.CODE'>, 'CRYPT': <class 'gluon.validators.CRYPT'>, ...}"
+p383
+sS'subtitle'
+p384
+S"<lazyT 'customize me!'>"
+p385
+sS'session_id_name'
+p386
+S"'session_id_modify_headers'"
+p387
+sS'_custom_commit'
+p388
+S'None'
+p389
+sS'_caller'
+p390
+S'<function <lambda>>'
+p391
+sS'files'
+p392
+S'[]'
+p393
+sS'view'
+p394
+S"'default/index.html'"
+p395
+ssS'locals'
+p396
+(dp397
+g56
+S'<addinfourl at 159938156 whose fp = <socket._fileobject object>>'
+p398
+sg5
+S'404'
+p399
+sg58
+S'<httplib.HTTPMessage instance>'
+p400
+sS'self'
+p401
+S'<urllib2.HTTPDefaultErrorHandler instance>'
+p402
+sS'req'
+p403
+S'<urllib2.Request instance>'
+p404
+sg52
+S"'Not Found'"
+p405
+sssS'traceback'
+p406
+S'Traceback (most recent call last):\n  File "/home/uolter/pycode/web2py_1.90.3/gluon/restricted.py", line 188, in restricted\n    exec ccode in environment\n  File "/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py", line 136, in <module>\n  File "/home/uolter/pycode/web2py_1.90.3/gluon/globals.py", line 95, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py", line 43, in index\n    form.vars.result=_call_url(form, headers)\n  File "/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py", line 76, in _call_url\n    res=opener.open(req)\n  File "/usr/lib/python2.6/urllib2.py", line 397, in open\n    response = meth(req, response)\n  File "/usr/lib/python2.6/urllib2.py", line 510, in http_response\n    \'http\', request, response, code, msg, hdrs)\n  File "/usr/lib/python2.6/urllib2.py", line 435, in error\n    return self._call_chain(*args)\n  File "/usr/lib/python2.6/urllib2.py", line 369, in _call_chain\n    result = func(*args)\n  File "/usr/lib/python2.6/urllib2.py", line 518, in http_error_default\n    raise HTTPError(req.get_full_url(), code, msg, hdrs, fp)\nHTTPError: HTTP Error 404: Not Found\n'
+p407
+s.

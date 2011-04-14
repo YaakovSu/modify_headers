@@ -1,0 +1,134 @@
+{{extend 'layout.html'}}
+<script type="text/javascript" src="{{=URL('static','js/ZeroClipboard.js')}}"></script>
+
+<script>
+
+      $(document).ready(function() {
+    	      	     	    			
+    	/* This is the delete header example. */
+        $('#session_headers').click(function(event) {
+          var $tgt = $(event.target);
+          if ($tgt.is('div')) {
+              pos = $tgt.attr("id");
+              $.post(
+               '{{=URL("delete_header")}}',
+               {'header': pos},
+               function(data) {
+                   $('#session_headers').html(data)
+               }
+              );                           
+          }
+        });
+      }
+      );
+      
+      $(document).ready(function() {
+    	  $('#button_go').click(function(event){    		  
+    		  document.forms[0].flag_redirect.value='y';	    	   
+    	  });
+      });
+      
+      $(document).ready(function() {
+    	//set path
+    	  ZeroClipboard.setMoviePath("{{=URL('static','ZeroClipboard10.swf')}}");
+    	  //create client
+    	  var clip = new ZeroClipboard.Client();
+    	  //event
+    	  clip.addEventListener('mousedown',function() {
+    	    clip.setText(document.getElementById('no_table_result').value);
+    	  });
+    	  clip.addEventListener('complete',function(client,text) {
+    		  $('.flash').html('Successfully copied.');
+    		  $('.flash').show();    		      		  
+    	  });
+    	  //glue it to the button
+    	  clip.glue('copy');
+      });
+      
+      $(document).ready(function(){ 
+		$('input[type=text]').focus(function(){ 
+			if($(this).val() == $(this).attr('defaultValue'))
+    	    {
+    	      $(this).val('');
+    	    }
+    	  });
+    	  		
+    	}); 
+
+</script>
+
+<div class='title'>
+	<h2 style="padding-left:10px">{{=T('Proxy Headers')}}</h2>
+</div>
+<br/>
+<div class='main_box'>
+	<form method="post" enctype="multipart/form-data" action="">
+		<div id='url'>
+			<label for="url">Url: </label>
+			<input type="url" value="{{= (session.url if session.url else '') }}" name="url" id="no_table_url" class="string" size=45>
+			<input type="submit" value="{{=T('Get!')}}">&nbsp;	                	
+			<input type="submit" id='button_go' value="{{=T('Go!')}}">
+		</div>
+    	<table>
+        	<tbody>
+        		<tr>
+        			<td class="w2p_fl" colspan="3">
+        				<label for="headers">Http Headers</label>
+        			</td>
+        		</tr>
+				<tr>
+					<td class="w2p_fl">
+						<input type="text" value="header" name="header" id="header_key" class="string" size=20>
+					</td>
+					<td class="w2p_fl">
+						<input type="text" value="value" name="value" id="header_value" class="string" size=20>
+					</td>
+					<td class="w2p_fc">
+						<div id='add_header' style='display:inline'>
+	                        {{=A('Add', _href='#') }}
+	                    </div>
+	                    <script>
+	                        $('#add_header').click(function(event){
+	                        	if ($('#header_key').attr('value')!=$('#header_key').attr('defaultValue')
+	                        			&& $('#header_value').attr('value')!=$('#header_value').attr('defaultValue')) {
+	                            	ajax('{{=URL("add_header")}}', ['header', 'value'], 'session_headers');
+	                            	document.getElementById('header_key').value='header';
+	                            	document.getElementById('header_value').value='value';
+	                            	event.preventDefault();
+	                        	}
+	                        });
+	                    </script>
+					</td>
+				
+				</tr>					              	                
+	            <tr>            	                
+	                <td class="w2p_fw" colspan='3'>
+	                    <div id='session_headers'>
+	                        {{=headers}}
+	                    </div>
+	                </td>
+	            </tr>
+			</tbody>	           
+		</table>
+		<label id="result" for="no_table_result" style='padding:0.1em 0.5em;' >Result</label>
+		&nbsp;		
+		{{if form.vars.time: }}
+			<span class='text_simple_red'>Time {{='%d,%d sec.' %(form.vars.time.seconds, form.vars.time.microseconds/1000)}}</span>
+		{{pass}}
+		<br/>
+		<textarea rows="10" name="result" id="no_table_result" cols="80" disabled="disabled">
+			{{=form.vars.result if form.vars.result else ''}}
+		</textarea>
+		<br/>
+		<label>{{=T('Keep values for 30 days')}}</label>&nbsp;
+		<input name="save_cookie" type="checkbox" value='Y' checked="checked" style="vertical-align: middle">
+		<input type="button" id="copy" name="copy" value="{{=T('Copy to Clipboard')}}" />&nbsp;
+	        
+		<div class="hidden" style="display: none;">
+			<input value="form_one" type="hidden" name="_formname" />         
+			<input value="n" type="hidden" name="flag_redirect" />
+		</div>      
+   	</form>
+	</div>      
+<br/>
+<hr/>

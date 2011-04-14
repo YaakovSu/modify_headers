@@ -1,0 +1,509 @@
+(dp1
+S'output'
+p2
+S''
+sS'layer'
+p3
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p4
+sS'code'
+p5
+S'# -*- coding: utf-8 -*- \n# this file is released under public domain and you can use without limitations\n\n#########################################################################\n## This is a samples controller\n## - index is the default action of any application\n## - user is required for authentication and authorization\n## - download is for downloading files uploaded in the db (does streaming)\n## - call exposes all registered services (none by default)\n#########################################################################\n\nimport urllib2\n\n# import simplejson as json\nif request.env.web2py_runtime_gae:\n    from django.utils import simplejson as json\nelse:\n    import simplejson as json\n\ndef index():\n\n    headers=session.headers \n                \n    if headers==None or len(headers)<1:\n        # try to read headers from the cookies\n        headers=_load_cookies(request)        \n        if headers==None:        \n            headers={}\n            \n        session.headers=headers\n\n        \n    form = SQLFORM.factory(\n         Field(\'url\', requires=IS_NOT_EMPTY()),\n         Field(\'header\'),\n         Field(\'value\'),\n         Field(\'result\', \'text\')\n         )\n         \n        \n    if form.accepts(request.vars, formname=\'form_one\'):\n        response.flash = T(\'Here you go!!\')\n        try:                \n            form.vars.result=_call_url(form, headers)\n        except HTTPError:   \n            import pdb; pdb.set_trace()     \n            return T(\'Error calling the url.\')\n        \n        if request.vars.flag_redirect ==\'y\':\n            return form.vars.result\n                    \n            \n    return dict(form=form, headers=_html_headers(headers))\n\n\ndef _set_headres(headers, req):\n    \n    if headers:\n        for h in headers:\n            req.add_header(h, headers[h])\n    \n    return req\n            \n\n        \ndef _call_url(form, headers):\n    \n    \n    if not form.vars.url.startswith(\'http\'):\n        url=\'http://%s\' %form.vars.url\n    else:\n        url=form.vars.url\n    \n    req = urllib2.Request(url)\n    req= _set_headres(headers, req)\n            \n    opener = urllib2.build_opener()\n    res=opener.open(req)    \n    \n    return res.read()\n    \ndef _html_headers(headers):\n    \n    list_header=[]\n    for h in headers:\n        list_header.append(LI(\'%s:%s  \' %(h, headers[h]), A(DIV(\'delete\', _id=\'%s\' %h, _class=\'link_delete\' ), _href=\'#\')))\n                        \n    return UL(list_header, _id=\'list_headers\')\n    \ndef add_header():\n\n    headers=session.headers\n               \n    if (request.vars.header and len(request.vars.header)>0):\n        headers[request.vars.header]= request.vars.value\n\n          \n    return _html_headers(headers).xml()\n    \ndef delete_header():\n    \n    headers=session.headers\n   \n    if request.vars.header:\n        headers.pop(request.vars.header)\n    \n    return _html_headers(headers).xml()\n    \ndef _save_cookies(response, headers):\n\n    response.cookies[\'headers\'] = json.dumps(headers)\n    \n    # one month cookies\n    response.cookies[\'headers\'][\'expires\'] = 30 * 24 * 60 * 60\n    # response.cookies[\'headers\'][\'path\'] = \'/modify_headers/\'\n    # response.cookies[\'headers\'][\'domain\'] = response._view_environment[\'request\'].env[\'remote_addr\']\n    \ndef _load_cookies(request):\n\n        \n    if request.cookies.has_key(\'headers\'):    \n            \n        myc=request.cookies[\'headers\']    \n                                  \n        return json.loads(myc.value)\n       \n           \ndef call():\n    """\n    exposes services. for example:\n    http://..../[app]/default/call/jsonrpc\n    decorate with @services.jsonrpc the functions to expose\n    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv\n    """\n    session.forget()\n    return service()\n\nresponse._vars=response._caller(index)\n'
+p6
+sS'snapshot'
+p7
+(dp8
+S'exception'
+p9
+(dp10
+S'__hash__'
+p11
+S"<method-wrapper '__hash__' of exceptions.NameError object>"
+p12
+sS'__setattr__'
+p13
+S"<method-wrapper '__setattr__' of exceptions.NameError object>"
+p14
+sS'__reduce_ex__'
+p15
+S'<built-in method __reduce_ex__ of exceptions.NameError object>'
+p16
+sS'__getslice__'
+p17
+S"<method-wrapper '__getslice__' of exceptions.NameError object>"
+p18
+sS'__getitem__'
+p19
+S"<method-wrapper '__getitem__' of exceptions.NameError object>"
+p20
+sS'__setstate__'
+p21
+S'<built-in method __setstate__ of exceptions.NameError object>'
+p22
+sS'__reduce__'
+p23
+S'<built-in method __reduce__ of exceptions.NameError object>'
+p24
+sS'__str__'
+p25
+S"<method-wrapper '__str__' of exceptions.NameError object>"
+p26
+sS'__format__'
+p27
+S'<built-in method __format__ of exceptions.NameError object>'
+p28
+sS'__getattribute__'
+p29
+S"<method-wrapper '__getattribute__' of exceptions.NameError object>"
+p30
+sS'__class__'
+p31
+S"<type 'exceptions.NameError'>"
+p32
+sS'__unicode__'
+p33
+S'<built-in method __unicode__ of exceptions.NameError object>'
+p34
+sS'__delattr__'
+p35
+S"<method-wrapper '__delattr__' of exceptions.NameError object>"
+p36
+sS'__subclasshook__'
+p37
+S'<built-in method __subclasshook__ of type object>'
+p38
+sS'__repr__'
+p39
+S"<method-wrapper '__repr__' of exceptions.NameError object>"
+p40
+sS'args'
+p41
+S'("global name \'HTTPError\' is not defined",)'
+p42
+sS'__dict__'
+p43
+S'{}'
+p44
+sS'__sizeof__'
+p45
+S'<built-in method __sizeof__ of exceptions.NameError object>'
+p46
+sS'__doc__'
+p47
+S"'Name not found globally.'"
+p48
+sS'__init__'
+p49
+S"<method-wrapper '__init__' of exceptions.NameError object>"
+p50
+sS'__new__'
+p51
+S'<built-in method __new__ of type object>'
+p52
+ssS'evalue'
+p53
+S"global name 'HTTPError' is not defined"
+p54
+sS'request'
+p55
+(dp56
+S'function'
+p57
+S"'index'"
+p58
+sS'body'
+p59
+S"<open file '<fdopen>', mode 'w+b'>"
+p60
+sS'wsgi'
+p61
+S"<Storage {'start_response': <function <lambda> a...ING': 'gzip,deflate', 'HTTP_KEEP_ALIVE': '115'}}>"
+p62
+sS'extension'
+p63
+S"'html'"
+p64
+sS'vars'
+p65
+S"<Storage {'flag_redirect': 'n', 'url': 'https://...r', '_formname': 'form_one', 'save_cookie': 'Y'}>"
+p66
+sS'cid'
+p67
+S'None'
+p68
+sS'url'
+p69
+S'<gluon.html.XML object>'
+p70
+sg41
+S'[]'
+p71
+sS'controller'
+p72
+S"'default'"
+p73
+sS'cookies'
+p74
+S'<SimpleCookie: headers=\'{"header": "value"}\' ses...\'127.0.0.1-12623d41-fcf4-4c78-9489-ef0b3e87acff\'>'
+p75
+sS'application'
+p76
+S"'modify_headers'"
+p77
+sS'ajax'
+p78
+S'False'
+p79
+sS'client'
+p80
+S"'127.0.0.1'"
+p81
+sS'env'
+p82
+S"<Storage {'content_length': '830', 'http_user_ag...te', 'query_string': '', 'wsgi_run_once': False}>"
+p83
+sS'raw_args'
+p84
+S'None'
+p85
+sS'get_vars'
+p86
+S'<Storage {}>'
+p87
+sS'folder'
+p88
+S"'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/'"
+p89
+sS'now'
+p90
+S'datetime.datetime(2011, 1, 22, 19, 35, 22, 258626)'
+p91
+sS'post_vars'
+p92
+S"<Storage {'flag_redirect': 'n', 'url': 'https://...r', '_formname': 'form_one', 'save_cookie': 'Y'}>"
+p93
+ssS'frames'
+p94
+(lp95
+(dp96
+S'file'
+p97
+S'/home/uolter/pycode/web2py_1.90.3/gluon/restricted.py'
+p98
+sS'dump'
+p99
+(dp100
+S'environment'
+p101
+S"{'A': <class 'gluon.html.A'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'CENTER': <class 'gluon.html.CENTER'>, 'CLEANUP': <class 'gluon.validators.CLEANUP'>, 'CODE': <class 'gluon.html.CODE'>, 'CRYPT': <class 'gluon.validators.CRYPT'>, ...}"
+p102
+sS'ccode'
+p103
+S'<code object <module> at 0x9dd4920, file "/home/.../modify_headers/controllers/default.py", line 12>'
+p104
+ssS'lnum'
+p105
+I188
+sS'lines'
+p106
+(dp107
+I192
+S'        # XXX Show exception in Wing IDE if running in debugger'
+p108
+sI183
+S'        if type(code) == types.CodeType:'
+p109
+sI184
+S'            ccode = code'
+p110
+sI185
+S'        else:'
+p111
+sI186
+S'            ccode = compile2(code,layer)'
+p112
+sI187
+S''
+sI188
+S'        exec ccode in environment'
+p113
+sI189
+S'    except HTTP:'
+p114
+sI190
+S'        raise'
+p115
+sI191
+S'    except Exception:'
+p116
+ssS'call'
+p117
+S"(code='# -*- coding: utf-8 -*- \\n# this file is released...ervice()\\n\\nresponse._vars=response._caller(index)\\n', environment={'A': <class 'gluon.html.A'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'CENTER': <class 'gluon.html.CENTER'>, 'CLEANUP': <class 'gluon.validators.CLEANUP'>, 'CODE': <class 'gluon.html.CODE'>, 'CRYPT': <class 'gluon.validators.CRYPT'>, ...}, layer='/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py')"
+p118
+sS'func'
+p119
+S'restricted'
+p120
+sa(dp121
+g97
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p122
+sg99
+(dp123
+sg105
+I138
+sg106
+(dp124
+I128
+S'def call():'
+p125
+sI129
+S'    """'
+p126
+sI130
+S'    exposes services. for example:'
+p127
+sI131
+S'    http://..../[app]/default/call/jsonrpc'
+p128
+sI132
+S'    decorate with @services.jsonrpc the functions to expose'
+p129
+sI133
+S'    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv'
+p130
+sI134
+S'    """'
+p131
+sI135
+S'    session.forget()'
+p132
+sI136
+S'    return service()'
+p133
+sI127
+S''
+ssg117
+S'()'
+p134
+sg119
+S'<module>'
+p135
+sa(dp136
+g97
+S'/home/uolter/pycode/web2py_1.90.3/gluon/globals.py'
+p137
+sg99
+(dp138
+S'self'
+p139
+S'undefined'
+p140
+sS'f'
+S'<function index>'
+p141
+ssg105
+I95
+sg106
+(dp142
+I96
+S'        self._view_environment = None'
+p143
+sI97
+S'        self._custom_commit = None'
+p144
+sI98
+S'        self._custom_rollback = None'
+p145
+sI99
+S''
+sI90
+S"        self.flash = ''           # used by the default view layout"
+p146
+sI91
+S'        self.meta = Storage()     # used by web2py_ajax.html'
+p147
+sI92
+S'        self.menu = []            # used by the default view layout'
+p148
+sI93
+S'        self.files = []           # used by web2py_ajax.html'
+p149
+sI94
+S'        self._vars = None'
+p150
+sI95
+S'        self._caller = lambda f: f()'
+p151
+ssg117
+S'(f=<function index>)'
+p152
+sg119
+S'<lambda>'
+p153
+sa(dp154
+g97
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p155
+sg99
+(dp156
+S'HTTPError'
+p157
+g140
+ssg105
+I45
+sg106
+(dp158
+I40
+S''
+sI41
+S"    if form.accepts(request.vars, formname='form_one'):"
+p159
+sI42
+S"        response.flash = T('Here you go!!')"
+p160
+sI43
+S'        try:'
+p161
+sI44
+S'            form.vars.result=_call_url(form, headers)'
+p162
+sI45
+S'        except HTTPError:'
+p163
+sI46
+S'            import pdb; pdb.set_trace()'
+p164
+sI47
+S"            return T('Error calling the url.')"
+p165
+sI48
+S''
+sI49
+S"        if request.vars.flag_redirect =='y':"
+p166
+ssg117
+S'()'
+p167
+sg119
+S'index'
+p168
+sasS'pyver'
+p169
+S'Python 2.6.5: /usr/bin/python'
+p170
+sS'session'
+p171
+(dp172
+S'headers'
+p173
+S"{'User-Agent': 'Nokia6230'}"
+p174
+ssS'etype'
+p175
+S"<type 'exceptions.NameError'>"
+p176
+sS'date'
+p177
+S'Sat Jan 22 19:35:22 2011'
+p178
+sS'response'
+p179
+(dp180
+S'status'
+p181
+S'200'
+p182
+sg59
+S'<cStringIO.StringO object>'
+p183
+sg74
+S"<SimpleCookie: session_id_modify_headers='127.0.0.1-48cbf4c1-637b-4821-9c05-b182df8b477e'>"
+p184
+sS'_vars'
+p185
+S'None'
+p186
+sS'title'
+p187
+S"'modify_headers'"
+p188
+sS'session_file'
+p189
+S"<open file '/home/uolter/pycode/web2py_1.90.3/ap...8cbf4c1-637b-4821-9c05-b182df8b477e', mode 'rb+'>"
+p190
+sS'flash'
+p191
+S"<lazyT 'Here you go!!'>"
+p192
+sS'_custom_rollback'
+p193
+S'None'
+p194
+sS'session_id'
+p195
+S"'127.0.0.1-48cbf4c1-637b-4821-9c05-b182df8b477e'"
+p196
+sS'headers'
+p197
+S"<Storage {'Expires': 'Sat, 22 Jan 2011 18:35:22 ...he, must-revalidate, post-check=0, pre-check=0'}>"
+p198
+sS'meta'
+p199
+S"<Storage {'keywords': 'web2py, python, framework... 'Web2py Enterprise Framework', 'author': 'you'}>"
+p200
+sS'session_filename'
+p201
+S"'/home/uolter/pycode/web2py_1.90.3/applications/m...ns/127.0.0.1-48cbf4c1-637b-4821-9c05-b182df8b477e'"
+p202
+sS'postprocessing'
+p203
+S'[]'
+p204
+sS'menu'
+p205
+S"[(<lazyT 'Home'>, False, <gluon.html.XML object>, []), (<lazyT 'This App'>, False, <gluon.html.XML object>, [(<lazyT 'Controller'>, False, <gluon.html.XML object>), (<lazyT 'View'>, False, <gluon.html.XML object>), (<lazyT 'Layout'>, False, <gluon.html.XML object>), (<lazyT 'Stylesheet'>, False, <gluon.html.XML object>), (<lazyT 'DB Model'>, False, <gluon.html.XML object>), (<lazyT 'Menu Model'>, False, <gluon.html.XML object>), (<lazyT 'Database'>, False, <gluon.html.XML object>), (<lazyT 'Errors'>, False, <gluon.html.XML object>), (<lazyT 'About'>, False, <gluon.html.XML object>)]), (<lazyT 'Resources'>, False, None, [(<lazyT 'Documentation'>, False, 'http://www.web2py.com/book', [(<lazyT 'Preface'>, False, 'http://www.web2py.com/book/default/chapter/00'), (<lazyT 'Introduction'>, False, 'http://www.web2py.com/book/default/chapter/01'), (<lazyT 'Python'>, False, 'http://www.web2py.com/book/default/chapter/02'), (<lazyT 'Overview'>, False, 'http://www.web2py.com/book/default/chapter/03'), (<lazyT 'The Core'>, False, 'http://www.web2py.com/book/default/chapter/04'), (<lazyT 'The Views'>, False, 'http://www.web2py.com/book/default/chapter/05'), (<lazyT 'Database'>, False, 'http://www.web2py.com/book/default/chapter/06'), (<lazyT 'Forms and Validators'>, False, 'http://www.web2py.com/book/default/chapter/07'), (<lazyT 'Access Control'>, False, 'http://www.web2py.com/book/default/chapter/08'), (<lazyT 'Services'>, False, 'http://www.web2py.com/book/default/chapter/09'), (<lazyT 'Ajax Recipes'>, False, 'http://www.web2py.com/book/default/chapter/10'), (<lazyT 'Deployment Recipes'>, False, 'http://www.web2py.com/book/default/chapter/11'), (<lazyT 'Other Recipes'>, False, 'http://www.web2py.com/book/default/chapter/12'), (<lazyT 'Buy this book'>, False, 'http://stores.lulu.com/web2py')]), (<lazyT 'Community'>, False, None, [(<lazyT 'Groups'>, False, 'http://www.web2py.com/examples/default/usergroups'), (<lazyT 'Twitter'>, False, 'http://twitter.com/web2py'), (<lazyT 'Live chat'>, False, 'http://mibbit.com/?channel=%23web2py&server=irc.mibbit.net'), (<lazyT 'User Voice'>, False, 'http://web2py.uservoice.com/')]), (<lazyT 'Web2py'>, False, 'http://www.web2py.com', [(<lazyT 'Download'>, False, 'http://www.web2py.com/examples/default/download'), (<lazyT 'Support'>, False, 'http://www.web2py.com/examples/default/support'), (<lazyT 'Quick Examples'>, False, 'http://web2py.com/examples/default/examples'), (<lazyT 'FAQ'>, False, 'http://web2py.com/AlterEgo'), (<lazyT 'Free Applications'>, False, 'http://web2py.com/appliances'), (<lazyT 'Plugins'>, False, 'http://web2py.com/plugins'), (<lazyT 'Recipes'>, False, 'http://web2pyslices.com/'), (<lazyT 'Demo'>, False, 'http://web2py.com/demo_admin'), (<lazyT 'Semantic'>, False, 'http://web2py.com/semantic'), (<lazyT 'Layouts'>, False, 'http://web2py.com/layouts'), (<lazyT 'Videos'>, False, 'http://www.web2py.com/examples/default/videos/')])])]"
+p206
+sS'_view_environment'
+p207
+S"{'A': <class 'gluon.html.A'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'CENTER': <class 'gluon.html.CENTER'>, 'CLEANUP': <class 'gluon.validators.CLEANUP'>, 'CODE': <class 'gluon.html.CODE'>, 'CRYPT': <class 'gluon.validators.CRYPT'>, ...}"
+p208
+sS'subtitle'
+p209
+S"<lazyT 'customize me!'>"
+p210
+sS'session_id_name'
+p211
+S"'session_id_modify_headers'"
+p212
+sS'_custom_commit'
+p213
+S'None'
+p214
+sS'_caller'
+p215
+S'<function <lambda>>'
+p216
+sS'files'
+p217
+S'[]'
+p218
+sS'view'
+p219
+S"'default/index.html'"
+p220
+ssS'locals'
+p221
+(dp222
+g197
+S"{'User-Agent': 'Nokia6230'}"
+p223
+sS'form'
+p224
+S'<gluon.sqlhtml.SQLFORM object>'
+p225
+sssS'traceback'
+p226
+S'Traceback (most recent call last):\n  File "/home/uolter/pycode/web2py_1.90.3/gluon/restricted.py", line 188, in restricted\n    exec ccode in environment\n  File "/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py", line 138, in <module>\n  File "/home/uolter/pycode/web2py_1.90.3/gluon/globals.py", line 95, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py", line 45, in index\n    except HTTPError:\nNameError: global name \'HTTPError\' is not defined\n'
+p227
+s.

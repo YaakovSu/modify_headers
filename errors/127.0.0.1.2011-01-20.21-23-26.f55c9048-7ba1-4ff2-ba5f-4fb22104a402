@@ -1,0 +1,902 @@
+(dp1
+S'output'
+p2
+S''
+sS'layer'
+p3
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p4
+sS'code'
+p5
+S'# -*- coding: utf-8 -*- \n# this file is released under public domain and you can use without limitations\n\n#########################################################################\n## This is a samples controller\n## - index is the default action of any application\n## - user is required for authentication and authorization\n## - download is for downloading files uploaded in the db (does streaming)\n## - call exposes all registered services (none by default)\n#########################################################################\n\nimport urllib2\n\n# import simplejson as json\nif request.env.web2py_runtime_gae:\n    from django.utils import simplejson as json\nelse:\n    import simplejson as json\n\ndef index():\n\n    headers=session.headers \n                \n    if headers==None or len(headers)<1:\n        # try to read headers from the cookies\n        headers=_load_cookies(request)        \n        if headers==None:        \n            headers={}\n            \n        session.headers=headers\n\n        \n    form = SQLFORM.factory(\n         Field(\'url\', requires=IS_NOT_EMPTY()),\n         Field(\'header\'),\n         Field(\'value\'),\n         Field(\'result\', \'text\')\n         )\n         \n        \n    if form.accepts(request.vars, formname=\'form_one\'):\n        response.flash = T(\'Here you go!!\')                            \n        form.vars.result=_call_url(form, headers)\n    \n    return dict(form=form, headers=_html_headers(headers))\n    \n\ndef _call_url(form, headers):\n    \n    import pdb; pdb.set_trace()\n    \n    \n    if not form.vars.url.startswith(\'http\'):\n        url=\'http://%s\' %form.vars.url\n    else:\n        url=form.vars.url\n    \n    req = urllib2.Request(url)\n    \n    if headers:\n        for h in headers:   \n            req.add_header(h, headers[h])\n            \n    opener = urllib2.build_opener()\n    res=opener.open(req)    \n    \n    return res.read()\n    \ndef _html_headers(headers):\n    \n    list_header=[]\n    for h in headers:\n        list_header.append(LI(\'%s:%s  \' %(h, headers[h]), A(DIV(\'delete\', _id=\'%s\' %h, _class=\'link_delete\' ), _href=\'#\')))\n                        \n    return UL(list_header, _id=\'list_headers\')\n    \ndef add_header():\n\n    headers=session.headers\n               \n    if (request.vars.header and len(request.vars.header)>0):\n        headers[request.vars.header]= request.vars.value\n\n          \n    return _html_headers(headers).xml()\n    \ndef delete_header():\n    \n    headers=session.headers\n   \n    if request.vars.header:\n        headers.pop(request.vars.header)\n    \n    return _html_headers(headers).xml()\n    \ndef _save_cookies(response, headers):\n\n    response.cookies[\'headers\'] = json.dumps(headers)\n    \n    # one month cookies\n    response.cookies[\'headers\'][\'expires\'] = 30 * 24 * 60 * 60\n    # response.cookies[\'headers\'][\'path\'] = \'/modify_headers/\'\n    # response.cookies[\'headers\'][\'domain\'] = response._view_environment[\'request\'].env[\'remote_addr\']\n    \ndef _load_cookies(request):\n\n        \n    if request.cookies.has_key(\'headers\'):    \n            \n        myc=request.cookies[\'headers\']    \n                                  \n        return json.loads(myc.value)\n       \n           \ndef call():\n    """\n    exposes services. for example:\n    http://..../[app]/default/call/jsonrpc\n    decorate with @services.jsonrpc the functions to expose\n    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv\n    """\n    session.forget()\n    return service()\n\nresponse._vars=response._caller(index)\n'
+p6
+sS'snapshot'
+p7
+(dp8
+S'exception'
+p9
+(dp10
+S'__module__'
+p11
+S"'urllib2'"
+p12
+sS'__getslice__'
+p13
+S"<method-wrapper '__getslice__' of URLError object>"
+p14
+sS'__str__'
+p15
+S"<bound method URLError.__str__ of URLError(gaierror(-2, 'Name or service not known'),)>"
+p16
+sS'__reduce__'
+p17
+S'<built-in method __reduce__ of URLError object>'
+p18
+sS'__dict__'
+p19
+S"{'reason': gaierror(-2, 'Name or service not known')}"
+p20
+sS'__sizeof__'
+p21
+S'<built-in method __sizeof__ of URLError object>'
+p22
+sS'__weakref__'
+p23
+S'None'
+p24
+sS'__init__'
+p25
+S"<bound method URLError.__init__ of URLError(gaierror(-2, 'Name or service not known'),)>"
+p26
+sS'__setattr__'
+p27
+S"<method-wrapper '__setattr__' of URLError object>"
+p28
+sS'__reduce_ex__'
+p29
+S'<built-in method __reduce_ex__ of URLError object>'
+p30
+sS'__new__'
+p31
+S'<built-in method __new__ of type object>'
+p32
+sS'errno'
+p33
+S'None'
+p34
+sS'__format__'
+p35
+S'<built-in method __format__ of URLError object>'
+p36
+sS'__class__'
+p37
+S"<class 'urllib2.URLError'>"
+p38
+sS'filename'
+p39
+S'None'
+p40
+sS'__doc__'
+p41
+S'None'
+p42
+sS'__getitem__'
+p43
+S"<method-wrapper '__getitem__' of URLError object>"
+p44
+sS'__setstate__'
+p45
+S'<built-in method __setstate__ of URLError object>'
+p46
+sS'__getattribute__'
+p47
+S"<method-wrapper '__getattribute__' of URLError object>"
+p48
+sS'args'
+p49
+S"(gaierror(-2, 'Name or service not known'),)"
+p50
+sS'reason'
+p51
+S"gaierror(-2, 'Name or service not known')"
+p52
+sS'__subclasshook__'
+p53
+S'<built-in method __subclasshook__ of type object>'
+p54
+sS'__unicode__'
+p55
+S'<built-in method __unicode__ of URLError object>'
+p56
+sS'strerror'
+p57
+S'None'
+p58
+sS'__delattr__'
+p59
+S"<method-wrapper '__delattr__' of URLError object>"
+p60
+sS'__repr__'
+p61
+S"<method-wrapper '__repr__' of URLError object>"
+p62
+sS'__hash__'
+p63
+S"<method-wrapper '__hash__' of URLError object>"
+p64
+ssS'evalue'
+p65
+S'<urlopen error [Errno -2] Name or service not known>'
+p66
+sS'request'
+p67
+(dp68
+S'function'
+p69
+S"'index'"
+p70
+sS'body'
+p71
+S"<open file '<fdopen>', mode 'w+b'>"
+p72
+sS'wsgi'
+p73
+S"<Storage {'start_response': <function <lambda> a...ING': 'gzip,deflate', 'HTTP_KEEP_ALIVE': '115'}}>"
+p74
+sS'extension'
+p75
+S"'html'"
+p76
+sS'vars'
+p77
+S"<Storage {'url': 'www.twitter.com', 'header': 'h...form_one', 'value': 'value', 'save_cookie': 'Y'}>"
+p78
+sS'cid'
+p79
+S'None'
+p80
+sS'url'
+p81
+S'<gluon.html.XML object>'
+p82
+sg49
+S'[]'
+p83
+sS'controller'
+p84
+S"'default'"
+p85
+sS'cookies'
+p86
+S"<SimpleCookie: session_id_admin='127.0.0.1-7b670...'127.0.0.1-bc1849ba-5b29-432d-b7e3-c1fb1a38433b'>"
+p87
+sS'application'
+p88
+S"'modify_headers'"
+p89
+sS'ajax'
+p90
+S'False'
+p91
+sS'client'
+p92
+S"'127.0.0.1'"
+p93
+sS'env'
+p94
+S"<Storage {'content_length': '662', 'http_user_ag...te', 'query_string': '', 'wsgi_run_once': False}>"
+p95
+sS'raw_args'
+p96
+S'None'
+p97
+sS'get_vars'
+p98
+S'<Storage {}>'
+p99
+sS'folder'
+p100
+S"'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/'"
+p101
+sS'now'
+p102
+S'datetime.datetime(2011, 1, 20, 21, 22, 20, 722376)'
+p103
+sS'post_vars'
+p104
+S"<Storage {'url': 'www.twitter.com', 'header': 'h...form_one', 'value': 'value', 'save_cookie': 'Y'}>"
+p105
+ssS'frames'
+p106
+(lp107
+(dp108
+S'file'
+p109
+S'/home/uolter/pycode/web2py_1.90.3/gluon/restricted.py'
+p110
+sS'dump'
+p111
+(dp112
+S'environment'
+p113
+S"{'A': <class 'gluon.html.A'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'CENTER': <class 'gluon.html.CENTER'>, 'CLEANUP': <class 'gluon.validators.CLEANUP'>, 'CODE': <class 'gluon.html.CODE'>, 'CRYPT': <class 'gluon.validators.CRYPT'>, ...}"
+p114
+sS'ccode'
+p115
+S'<code object <module> at 0xa543ec0, file "/home/.../modify_headers/controllers/default.py", line 12>'
+p116
+ssS'lnum'
+p117
+I188
+sS'lines'
+p118
+(dp119
+I192
+S'        # XXX Show exception in Wing IDE if running in debugger'
+p120
+sI183
+S'        if type(code) == types.CodeType:'
+p121
+sI184
+S'            ccode = code'
+p122
+sI185
+S'        else:'
+p123
+sI186
+S'            ccode = compile2(code,layer)'
+p124
+sI187
+S''
+sI188
+S'        exec ccode in environment'
+p125
+sI189
+S'    except HTTP:'
+p126
+sI190
+S'        raise'
+p127
+sI191
+S'    except Exception:'
+p128
+ssS'call'
+p129
+S"(code='# -*- coding: utf-8 -*- \\n# this file is released...ervice()\\n\\nresponse._vars=response._caller(index)\\n', environment={'A': <class 'gluon.html.A'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'CENTER': <class 'gluon.html.CENTER'>, 'CLEANUP': <class 'gluon.validators.CLEANUP'>, 'CODE': <class 'gluon.html.CODE'>, 'CRYPT': <class 'gluon.validators.CRYPT'>, ...}, layer='/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py')"
+p130
+sS'func'
+p131
+S'restricted'
+p132
+sa(dp133
+g109
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p134
+sg111
+(dp135
+sg117
+I125
+sg118
+(dp136
+I114
+S''
+sI115
+S'def call():'
+p137
+sI116
+S'    """'
+p138
+sI117
+S'    exposes services. for example:'
+p139
+sI118
+S'    http://..../[app]/default/call/jsonrpc'
+p140
+sI119
+S'    decorate with @services.jsonrpc the functions to expose'
+p141
+sI120
+S'    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv'
+p142
+sI121
+S'    """'
+p143
+sI122
+S'    session.forget()'
+p144
+sI123
+S'    return service()'
+p145
+ssg129
+S'()'
+p146
+sg131
+S'<module>'
+p147
+sa(dp148
+g109
+S'/home/uolter/pycode/web2py_1.90.3/gluon/globals.py'
+p149
+sg111
+(dp150
+S'self'
+p151
+S'undefined'
+p152
+sS'f'
+S'<function index>'
+p153
+ssg117
+I95
+sg118
+(dp154
+I96
+S'        self._view_environment = None'
+p155
+sI97
+S'        self._custom_commit = None'
+p156
+sI98
+S'        self._custom_rollback = None'
+p157
+sI99
+S''
+sI90
+S"        self.flash = ''           # used by the default view layout"
+p158
+sI91
+S'        self.meta = Storage()     # used by web2py_ajax.html'
+p159
+sI92
+S'        self.menu = []            # used by the default view layout'
+p160
+sI93
+S'        self.files = []           # used by web2py_ajax.html'
+p161
+sI94
+S'        self._vars = None'
+p162
+sI95
+S'        self._caller = lambda f: f()'
+p163
+ssg129
+S'(f=<function index>)'
+p164
+sg131
+S'<lambda>'
+p165
+sa(dp166
+g109
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p167
+sg111
+(dp168
+S'global _call_url'
+p169
+S'<function _call_url>'
+p170
+sS'headers'
+p171
+S'{}'
+p172
+sS'form.vars.result'
+p173
+S"''"
+p174
+sS'form.vars'
+p175
+S"<Storage {'url': 'www.twitter.com', 'header': 'header', 'result': '', 'value': 'value', 'id': None}>"
+p176
+sS'form'
+p177
+S'<gluon.sqlhtml.SQLFORM object>'
+p178
+ssg117
+I43
+sg118
+(dp179
+I38
+S'         )'
+p180
+sI39
+S''
+sI40
+S''
+sI41
+S"    if form.accepts(request.vars, formname='form_one'):"
+p181
+sI42
+S"        response.flash = T('Here you go!!')"
+p182
+sI43
+S'        form.vars.result=_call_url(form, headers)'
+p183
+sI44
+S''
+sI45
+S'    return dict(form=form, headers=_html_headers(headers))'
+p184
+sI46
+S''
+sI47
+S''
+ssg129
+S'()'
+p185
+sg131
+S'index'
+p186
+sa(dp187
+g109
+S'/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py'
+p188
+sg111
+(dp189
+S'res'
+p190
+g152
+sS'opener'
+p191
+S'<urllib2.OpenerDirector instance>'
+p192
+sS'req'
+p193
+S'<urllib2.Request instance>'
+p194
+sS'opener.open'
+p195
+S'<bound method OpenerDirector.open of <urllib2.OpenerDirector instance>>'
+p196
+ssg117
+I65
+sg118
+(dp197
+I64
+S'    opener = urllib2.build_opener()'
+p198
+sI65
+S'    res=opener.open(req)'
+p199
+sI66
+S''
+sI67
+S'    return res.read()'
+p200
+sI68
+S''
+sI69
+S'def _html_headers(headers):'
+p201
+sI60
+S'    if headers:'
+p202
+sI61
+S'        for h in headers:'
+p203
+sI62
+S'            req.add_header(h, headers[h])'
+p204
+sI63
+S''
+ssg129
+S'(form=<gluon.sqlhtml.SQLFORM object>, headers={})'
+p205
+sg131
+S'_call_url'
+p206
+sa(dp207
+g109
+S'/usr/lib/python2.6/urllib2.py'
+p208
+sg111
+(dp209
+S'self'
+p210
+S'<urllib2.OpenerDirector instance>'
+p211
+sS'req'
+p212
+S'<urllib2.Request instance>'
+p213
+sS'data'
+p214
+S'None'
+p215
+sS'response'
+p216
+g152
+sS'self._open'
+p217
+S'<bound method OpenerDirector._open of <urllib2.OpenerDirector instance>>'
+p218
+ssg117
+I391
+sg118
+(dp219
+I386
+S'        meth_name = protocol+"_request"'
+p220
+sI387
+S'        for processor in self.process_request.get(protocol, []):'
+p221
+sI388
+S'            meth = getattr(processor, meth_name)'
+p222
+sI389
+S'            req = meth(req)'
+p223
+sI390
+S''
+sI391
+S'        response = self._open(req, data)'
+p224
+sI392
+S''
+sI393
+S'        # post-process response'
+p225
+sI394
+S'        meth_name = protocol+"_response"'
+p226
+sI395
+S'        for processor in self.process_response.get(protocol, []):'
+p227
+ssg129
+S'(self=<urllib2.OpenerDirector instance>, fullurl=<urllib2.Request instance>, data=None, timeout=<object object>)'
+p228
+sg131
+S'open'
+p229
+sa(dp230
+g109
+S'/usr/lib/python2.6/urllib2.py'
+p231
+sg111
+(dp232
+S'req'
+p233
+S'<urllib2.Request instance>'
+p234
+ssg117
+I409
+sg118
+(dp235
+I404
+S'        if result:'
+p236
+sI405
+S'            return result'
+p237
+sI406
+S''
+sI407
+S'        protocol = req.get_type()'
+p238
+sI408
+S'        result = self._call_chain(self.handle_open, protocol, protocol +'
+p239
+sI409
+S"                                  '_open', req)"
+p240
+sI410
+S'        if result:'
+p241
+sI411
+S'            return result'
+p242
+sI412
+S''
+sI413
+S"        return self._call_chain(self.handle_open, 'unknown',"
+p243
+ssg129
+S'(self=<urllib2.OpenerDirector instance>, req=<urllib2.Request instance>, data=None)'
+p244
+sg131
+S'_open'
+p245
+sa(dp246
+g109
+S'/usr/lib/python2.6/urllib2.py'
+p247
+sg111
+(dp248
+S'args'
+p249
+S'(<urllib2.Request instance>,)'
+p250
+sS'result'
+p251
+S'None'
+p252
+sS'func'
+p253
+S'<bound method HTTPHandler.http_open of <urllib2.HTTPHandler instance>>'
+p254
+ssg117
+I369
+sg118
+(dp255
+I364
+S'        # could.  Otherwise, they return the response.'
+p256
+sI365
+S'        handlers = chain.get(kind, ())'
+p257
+sI366
+S'        for handler in handlers:'
+p258
+sI367
+S'            func = getattr(handler, meth_name)'
+p259
+sI368
+S''
+sI369
+S'            result = func(*args)'
+p260
+sI370
+S'            if result is not None:'
+p261
+sI371
+S'                return result'
+p262
+sI372
+S''
+sI373
+S'    def open(self, fullurl, data=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):'
+p263
+ssg129
+S"(self=<urllib2.OpenerDirector instance>, chain={'file': [<urllib2.FileHandler instance>], 'ftp': [<urllib2.ProxyHandler instance>, <urllib2.FTPHandler instance>], 'http': [<urllib2.ProxyHandler instance>, <urllib2.HTTPHandler instance>], 'https': [<urllib2.ProxyHandler instance>, <urllib2.HTTPSHandler instance>], 'unknown': [<urllib2.UnknownHandler instance>]}, kind='http', meth_name='http_open', *args=(<urllib2.Request instance>,))"
+p264
+sg131
+S'_call_chain'
+p265
+sa(dp266
+g109
+S'/usr/lib/python2.6/urllib2.py'
+p267
+sg111
+(dp268
+S'self'
+p269
+S'<urllib2.HTTPHandler instance>'
+p270
+sS'req'
+p271
+S'<urllib2.Request instance>'
+p272
+sS'global httplib'
+p273
+S"<module 'httplib' from '/usr/lib/python2.6/httplib.pyc'>"
+p274
+sS'self.do_open'
+p275
+S'<bound method HTTPHandler.do_open of <urllib2.HTTPHandler instance>>'
+p276
+sS'httplib.HTTPConnection'
+p277
+S'<class httplib.HTTPConnection>'
+p278
+ssg117
+I1161
+sg118
+(dp279
+I1156
+S''
+sI1157
+S''
+sI1158
+S'class HTTPHandler(AbstractHTTPHandler):'
+p280
+sI1159
+S''
+sI1160
+S'    def http_open(self, req):'
+p281
+sI1161
+S'        return self.do_open(httplib.HTTPConnection, req)'
+p282
+sI1162
+S''
+sI1163
+S'    http_request = AbstractHTTPHandler.do_request_'
+p283
+sI1164
+S''
+sI1165
+S"if hasattr(httplib, 'HTTPS'):"
+p284
+ssg129
+S'(self=<urllib2.HTTPHandler instance>, req=<urllib2.Request instance>)'
+p285
+sg131
+S'http_open'
+p286
+sa(dp287
+g109
+S'/usr/lib/python2.6/urllib2.py'
+p288
+sg111
+(dp289
+S'err'
+p290
+S"gaierror(-2, 'Name or service not known')"
+p291
+sS'global URLError'
+p292
+S"<class 'urllib2.URLError'>"
+p293
+ssg117
+I1136
+sg118
+(dp294
+I1131
+S''
+sI1132
+S'        try:'
+p295
+sI1133
+S'            h.request(req.get_method(), req.get_selector(), req.data, headers)'
+p296
+sI1134
+S'            r = h.getresponse()'
+p297
+sI1135
+S'        except socket.error, err: # XXX what error?'
+p298
+sI1136
+S'            raise URLError(err)'
+p299
+sI1137
+S''
+sI1138
+S'        # Pick apart the HTTPResponse object to get the addinfourl'
+p300
+sI1139
+S'        # object initialized properly.'
+p301
+sI1140
+S''
+ssg129
+S'(self=<urllib2.HTTPHandler instance>, http_class=<class httplib.HTTPConnection>, req=<urllib2.Request instance>)'
+p302
+sg131
+S'do_open'
+p303
+sasS'pyver'
+p304
+S'Python 2.6.5: /usr/bin/python'
+p305
+sS'session'
+p306
+(dp307
+S'headers'
+p308
+g172
+ssS'etype'
+p309
+S"<class 'urllib2.URLError'>"
+p310
+sS'date'
+p311
+S'Thu Jan 20 21:23:26 2011'
+p312
+sS'response'
+p313
+(dp314
+S'status'
+p315
+S'200'
+p316
+sg71
+S'<cStringIO.StringO object>'
+p317
+sg86
+S"<SimpleCookie: session_id_modify_headers='127.0.0.1-b4fb7777-3458-4762-bc31-52ad0ca6b475'>"
+p318
+sS'_vars'
+p319
+S'None'
+p320
+sS'title'
+p321
+S"'modify_headers'"
+p322
+sS'session_file'
+p323
+S"<open file '/home/uolter/pycode/web2py_1.90.3/ap...4fb7777-3458-4762-bc31-52ad0ca6b475', mode 'rb+'>"
+p324
+sS'flash'
+p325
+S"<lazyT 'Here you go!!'>"
+p326
+sS'_custom_rollback'
+p327
+S'None'
+p328
+sS'session_id'
+p329
+S"'127.0.0.1-b4fb7777-3458-4762-bc31-52ad0ca6b475'"
+p330
+sS'headers'
+p331
+S"<Storage {'Expires': 'Thu, 20 Jan 2011 20:22:20 ...he, must-revalidate, post-check=0, pre-check=0'}>"
+p332
+sS'meta'
+p333
+S"<Storage {'keywords': 'web2py, python, framework... 'Web2py Enterprise Framework', 'author': 'you'}>"
+p334
+sS'session_filename'
+p335
+S"'/home/uolter/pycode/web2py_1.90.3/applications/m...ns/127.0.0.1-b4fb7777-3458-4762-bc31-52ad0ca6b475'"
+p336
+sS'postprocessing'
+p337
+S'[]'
+p338
+sS'menu'
+p339
+S"[(<lazyT 'Home'>, False, <gluon.html.XML object>, []), (<lazyT 'This App'>, False, <gluon.html.XML object>, [(<lazyT 'Controller'>, False, <gluon.html.XML object>), (<lazyT 'View'>, False, <gluon.html.XML object>), (<lazyT 'Layout'>, False, <gluon.html.XML object>), (<lazyT 'Stylesheet'>, False, <gluon.html.XML object>), (<lazyT 'DB Model'>, False, <gluon.html.XML object>), (<lazyT 'Menu Model'>, False, <gluon.html.XML object>), (<lazyT 'Database'>, False, <gluon.html.XML object>), (<lazyT 'Errors'>, False, <gluon.html.XML object>), (<lazyT 'About'>, False, <gluon.html.XML object>)]), (<lazyT 'Resources'>, False, None, [(<lazyT 'Documentation'>, False, 'http://www.web2py.com/book', [(<lazyT 'Preface'>, False, 'http://www.web2py.com/book/default/chapter/00'), (<lazyT 'Introduction'>, False, 'http://www.web2py.com/book/default/chapter/01'), (<lazyT 'Python'>, False, 'http://www.web2py.com/book/default/chapter/02'), (<lazyT 'Overview'>, False, 'http://www.web2py.com/book/default/chapter/03'), (<lazyT 'The Core'>, False, 'http://www.web2py.com/book/default/chapter/04'), (<lazyT 'The Views'>, False, 'http://www.web2py.com/book/default/chapter/05'), (<lazyT 'Database'>, False, 'http://www.web2py.com/book/default/chapter/06'), (<lazyT 'Forms and Validators'>, False, 'http://www.web2py.com/book/default/chapter/07'), (<lazyT 'Access Control'>, False, 'http://www.web2py.com/book/default/chapter/08'), (<lazyT 'Services'>, False, 'http://www.web2py.com/book/default/chapter/09'), (<lazyT 'Ajax Recipes'>, False, 'http://www.web2py.com/book/default/chapter/10'), (<lazyT 'Deployment Recipes'>, False, 'http://www.web2py.com/book/default/chapter/11'), (<lazyT 'Other Recipes'>, False, 'http://www.web2py.com/book/default/chapter/12'), (<lazyT 'Buy this book'>, False, 'http://stores.lulu.com/web2py')]), (<lazyT 'Community'>, False, None, [(<lazyT 'Groups'>, False, 'http://www.web2py.com/examples/default/usergroups'), (<lazyT 'Twitter'>, False, 'http://twitter.com/web2py'), (<lazyT 'Live chat'>, False, 'http://mibbit.com/?channel=%23web2py&server=irc.mibbit.net'), (<lazyT 'User Voice'>, False, 'http://web2py.uservoice.com/')]), (<lazyT 'Web2py'>, False, 'http://www.web2py.com', [(<lazyT 'Download'>, False, 'http://www.web2py.com/examples/default/download'), (<lazyT 'Support'>, False, 'http://www.web2py.com/examples/default/support'), (<lazyT 'Quick Examples'>, False, 'http://web2py.com/examples/default/examples'), (<lazyT 'FAQ'>, False, 'http://web2py.com/AlterEgo'), (<lazyT 'Free Applications'>, False, 'http://web2py.com/appliances'), (<lazyT 'Plugins'>, False, 'http://web2py.com/plugins'), (<lazyT 'Recipes'>, False, 'http://web2pyslices.com/'), (<lazyT 'Demo'>, False, 'http://web2py.com/demo_admin'), (<lazyT 'Semantic'>, False, 'http://web2py.com/semantic'), (<lazyT 'Layouts'>, False, 'http://web2py.com/layouts'), (<lazyT 'Videos'>, False, 'http://www.web2py.com/examples/default/videos/')])])]"
+p340
+sS'_view_environment'
+p341
+S"{'A': <class 'gluon.html.A'>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'CENTER': <class 'gluon.html.CENTER'>, 'CLEANUP': <class 'gluon.validators.CLEANUP'>, 'CODE': <class 'gluon.html.CODE'>, 'CRYPT': <class 'gluon.validators.CRYPT'>, ...}"
+p342
+sS'subtitle'
+p343
+S"<lazyT 'customize me!'>"
+p344
+sS'session_id_name'
+p345
+S"'session_id_modify_headers'"
+p346
+sS'_custom_commit'
+p347
+S'None'
+p348
+sS'_caller'
+p349
+S'<function <lambda>>'
+p350
+sS'files'
+p351
+S'[]'
+p352
+sS'view'
+p353
+S"'default/index.html'"
+p354
+ssS'locals'
+p355
+(dp356
+S'err'
+p357
+S"gaierror(-2, 'Name or service not known')"
+p358
+sS'h'
+S'<httplib.HTTPConnection instance>'
+p359
+sS'self'
+p360
+S'<urllib2.HTTPHandler instance>'
+p361
+sS'req'
+p362
+S'<urllib2.Request instance>'
+p363
+sg331
+S"{'Connection': 'close', 'Host': 'www.twitter.com', 'User-Agent': 'Python-urllib/2.6'}"
+p364
+sS'host'
+p365
+S"'proxy01:80'"
+p366
+sS'http_class'
+p367
+S'<class httplib.HTTPConnection>'
+p368
+sssS'traceback'
+p369
+S'Traceback (most recent call last):\n  File "/home/uolter/pycode/web2py_1.90.3/gluon/restricted.py", line 188, in restricted\n    exec ccode in environment\n  File "/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py", line 125, in <module>\n  File "/home/uolter/pycode/web2py_1.90.3/gluon/globals.py", line 95, in <lambda>\n    self._caller = lambda f: f()\n  File "/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py", line 43, in index\n    form.vars.result=_call_url(form, headers)\n  File "/home/uolter/pycode/web2py_1.90.3/applications/modify_headers/controllers/default.py", line 65, in _call_url\n    res=opener.open(req)\n  File "/usr/lib/python2.6/urllib2.py", line 391, in open\n    response = self._open(req, data)\n  File "/usr/lib/python2.6/urllib2.py", line 409, in _open\n    \'_open\', req)\n  File "/usr/lib/python2.6/urllib2.py", line 369, in _call_chain\n    result = func(*args)\n  File "/usr/lib/python2.6/urllib2.py", line 1161, in http_open\n    return self.do_open(httplib.HTTPConnection, req)\n  File "/usr/lib/python2.6/urllib2.py", line 1136, in do_open\n    raise URLError(err)\nURLError: <urlopen error [Errno -2] Name or service not known>\n'
+p370
+s.
